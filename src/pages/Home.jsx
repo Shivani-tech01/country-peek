@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import SearchBar from '../components/SearchBar'
 import CountryCard from '../components/CountryCard'
-import FilterBar from '../components/FilterBar'
 
 function Home() {
   const [query, setQuery] = useState('')
@@ -9,9 +8,8 @@ function Home() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
-  // ✅ New states for Part 4
-  const [region, setRegion] = useState('All')
-  const [sortBy, setSortBy] = useState('')
+  const [region, setRegion] = useState('')
+  const [sort, setSort] = useState('')
 
   useEffect(() => {
     const fetchCountries = async () => {
@@ -20,15 +18,17 @@ function Home() {
         return
       }
 
-      try {
-        setLoading(true)
-        setError(null)
+      setLoading(true)
+      setError(null)
 
+      try {
         const res = await fetch(
           `https://restcountries.com/v3.1/name/${query}`
         )
 
-        if (!res.ok) throw new Error('Country not found')
+        if (!res.ok) {
+          throw new Error('No countries found')
+        }
 
         const data = await res.json()
         setCountries(data)
@@ -40,49 +40,64 @@ function Home() {
       }
     }
 
-    fetchCountries()
+    const debounce = setTimeout(fetchCountries, 500)
+    return () => clearTimeout(debounce)
   }, [query])
 
-  // ✅ Derived state (IMPORTANT)
-  const displayed = [...countries]
-    .filter((c) => region === 'All' || c.region === region)
-    .sort((a, b) => {
-      if (sortBy === 'name') {
-        return a.name.common.localeCompare(b.name.common)
-      }
-      if (sortBy === 'population') {
-        return b.population - a.population
-      }
-      return 0
-    })
+  // FILTER + SORT (derived state)
+  let filteredCountries = countries
 
-  // ✅ Loading & Error UI
-  if (loading) return <h2>Loading...</h2>
-  if (error) return <h2>{error}</h2>
+  if (region) {
+    filteredCountries = filteredCountries.filter(
+      (c) => c.region === region
+    )
+  }
+
+  if (sort === 'name') {
+    filteredCountries = [...filteredCountries].sort((a, b) =>
+      a.name.common.localeCompare(b.name.common)
+    )
+  }
+
+  if (sort === 'population') {
+    filteredCountries = [...filteredCountries].sort(
+      (a, b) => b.population - a.population
+    )
+  }
 
   return (
     <div>
-      {/* ✅ SearchBar FIXED */}
-      <SearchBar value={query} onChange={setQuery} />
+      {/* Search */}
+      <SearchBar query={query} setQuery={setQuery} />
 
-      {/* ✅ Filter + Sort */}
-      <FilterBar
-        region={region}
-        onRegionChange={setRegion}
-        sortBy={sortBy}
-        onSortChange={setSortBy}
-      />
+      {/* Filter + Sort */}
+      <div className="controls">
+        <select value={region} onChange={(e) => setRegion(e.target.value)}>
+          <option value="">All Regions</option>
+          <option value="Asia">Asia</option>
+          <option value="Europe">Europe</option>
+          <option value="Africa">Africa</option>
+          <option value="Americas">Americas</option>
+          <option value="Oceania">Oceania</option>
+        </select>
 
-      {/* ✅ Results */}
-      {displayed.length > 0 ? (
-        <div className="cards-grid">
-          {displayed.map((country) => (
-            <CountryCard key={country.cca3} country={country} />
-          ))}
-        </div>
-      ) : (
-        <p>Search for a country</p>
-      )}
+        <select value={sort} onChange={(e) => setSort(e.target.value)}>
+          <option value="">Sort By</option>
+          <option value="name">Name (A-Z)</option>
+          <option value="population">Population (High → Low)</option>
+        </select>
+      </div>
+
+      {/* States */}
+      {loading && <p>Loading...</p>}
+      {error && <p>{error}</p>}
+
+      {/* Cards */}
+      <div className="cards-grid">
+        {filteredCountries.map((country) => (
+          <CountryCard key={country.cca3} country={country} />
+        ))}
+      </div>
     </div>
   )
 }
