@@ -1,12 +1,11 @@
-function SearchBar({ query, onQueryChange }) {
+function SearchBar({ value, onChange }) {
   return (
     <div className="search-bar">
       <input
-        className="search-bar__input"
-        value={query}
-        onChange={(e) => onQueryChange(e.target.value)}
-        placeholder="Search for a country..."
-        aria-label="Search countries"
+        type="text"
+        value={value}
+        placeholder="Search country..."
+        onChange={(e) => onChange(e.target.value)}
       />
     </div>
   )
