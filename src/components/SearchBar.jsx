@@ -1,13 +1,17 @@
 function SearchBar({ query, setQuery }) {
+  const handleChange = (e) => {
+    const value = e.target.value
+    setQuery(value)
+  }
+
   return (
-    <div className="search-bar">
-      <input
-        type="text"
-        placeholder="Search for a country..."
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-      />
-    </div>
+    <input
+      type="text"
+      placeholder="Search country..."
+      value={query}
+      aria-label="Search for a country"
+      onChange={handleChange}
+    />
   )
 }
 

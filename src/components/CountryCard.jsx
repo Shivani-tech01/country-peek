@@ -6,9 +6,9 @@ function CountryCard({ country }) {
 
   const { favourites, dispatch } = useFavourites()
 
-  const isSaved = favourites.some((f) => f.cca3 === cca3)
+  const isSaved = favourites.some(f => f.cca3 === cca3)
 
-  function handleFavourite(e) {
+  const handleFavClick = (e) => {
     e.stopPropagation()
 
     if (isSaved) {
@@ -20,18 +20,18 @@ function CountryCard({ country }) {
 
   return (
     <Link to={`/country/${cca3}`} className="card">
-      <img src={flags.png} alt={name.common} className="card__img" />
+      <img src={flags.png} alt={name.common} />
 
       <div className="card__body">
         <h3>{name.common}</h3>
-        <p><strong>Population:</strong> {population.toLocaleString()}</p>
-        <p><strong>Region:</strong> {region}</p>
-        <p><strong>Capital:</strong> {capital?.[0]}</p>
+        <p>Population: {population}</p>
+        <p>Region: {region}</p>
+        <p>Capital: {capital}</p>
 
-        {/* Favourite Button */}
+        {/* ⭐ Favourite Button */}
         <button
           className={`fav-btn ${isSaved ? 'fav-btn--saved' : ''}`}
-          onClick={handleFavourite}
+          onClick={handleFavClick}
         >
           {isSaved ? '♥ Saved' : '♡ Save'}
         </button>

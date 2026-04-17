@@ -1,13 +1,29 @@
 .fav-btn {
   margin-top: 10px;
   background: none;
-  border: none;
+  border: 1px solid #ccc;
+  padding: 6px 10px;
   cursor: pointer;
   font-size: 14px;
-  color: gray;
+  border-radius: 6px;
+}
+
+.fav-btn:hover {
+  background: rgba(0,0,0,0.05);
 }
 
 .fav-btn--saved {
   color: red;
-  font-weight: bold;
+  border-color: red;
+}
+
+.empty-state {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
 }

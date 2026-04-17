@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
 
 function Header() {
@@ -5,13 +6,19 @@ function Header() {
 
   return (
     <header className="header">
-      <h1 className="logo">CountryPeek</h1>
+      <h2>CountryPeek</h2>
 
       <nav className="header__nav">
-        <button className="theme-toggle" onClick={toggleTheme}>
-          {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
-        </button>
+        <Link to="/">Home</Link>
+        <Link to="/favourites">Favourites</Link>
       </nav>
+
+      <button
+        aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+        onClick={toggleTheme}
+      >
+        {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
+      </button>
     </header>
   )
 }

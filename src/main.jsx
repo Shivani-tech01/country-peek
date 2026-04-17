@@ -1,8 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
-import './App.css'
+import './index.css'
+
+// React Router
 import { BrowserRouter } from 'react-router-dom'
+
+// Context Providers
 import { ThemeProvider } from './context/ThemeContext'
 import { FavouritesProvider } from './context/FavouritesContext'
 
